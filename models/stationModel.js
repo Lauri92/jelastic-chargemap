@@ -1,6 +1,7 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import connections from './connections.js'
 
 const Schema = mongoose.Schema;
 
@@ -22,6 +23,7 @@ const stationSchema = new Schema({
       required: true,
     },
   },
+  Connections: [{type: Schema.Types.ObjectId, ref: connections}],
 });
 
 export default mongoose.model('Station', stationSchema);

@@ -1,10 +1,10 @@
 'use strict';
 
-import {cats} from '../models/catModel.js';
 import station from '../models/stationModel.js';
 
 const station_list_get = async (req, res) => {
-  res.json(await station.find());
+  res.json(
+      await station.find().populate('Connections')/*.populate('ConnectionTypes')*/);
 };
 
 const station_get = async (req, res) => {
