@@ -3,6 +3,7 @@
 import station from '../models/stationModel.js';
 
 const station_list_get = async (req, res) => {
+  const resultLimit = req.query.limit || 10
   res.json(
       await station.find().populate([
         {
@@ -15,14 +16,21 @@ const station_list_get = async (req, res) => {
           path: 'Connections',
           populate: {path: 'CurrentTypeID'},
         }],
-      ));
+      ).limit(resultLimit));
 };
 
 const station_get = async (req, res) => {
-  res.json(await station.findById(req.params.id).populate({
-        path: 'Connections',
-        populate: {path: 'ConnectionTypeID'},
-      },
+  res.json(await station.findById(req.params.id).populate([
+    {
+      path: 'Connections',
+      populate: {path: 'ConnectionTypeID'},
+    }, {
+      path: 'Connections',
+      populate: {path: 'LevelID'},
+    }, {
+      path: 'Connections',
+      populate: {path: 'CurrentTypeID'},
+    }],
   ));
 };
 
