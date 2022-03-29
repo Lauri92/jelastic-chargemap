@@ -3,6 +3,7 @@
 import station from '../models/stationModel.js';
 import {rectangleBounds} from '../utils/rectangleBounds.js';
 import connections from '../models/connections.js';
+import mongoose from 'mongoose';
 
 const station_list_get = async (req, res) => {
   try {
@@ -74,6 +75,42 @@ const station_post = async (req, res) => {
 };
 
 const station_patch = async (req, res) => {
+
+  try {
+    const parsedConnection = await JSON.parse(req.body.Connections);
+    const parsedStation = await JSON.parse(req.body.Station);
+    console.log(parsedConnection[0]._id);
+
+    await station.findOneAndUpdate(
+        {_id: parsedStation._id},
+        {
+          Title: parsedStation.Title,
+          Town: parsedStation.Town,
+          AddressLine1: parsedStation.AddressLine1,
+          StateOrProvince: parsedStation.StateOrProvince,
+          Postcode: parsedStation.Postcode,
+          Location: {
+            coordinates: parsedStation.Location.coordinates,
+            type: parsedStation.Location.type,
+          },
+        });
+    await connections.findOneAndUpdate(
+        {_id: parsedConnection[0]._id},
+        {
+          ConnectionTypeID: parsedConnection[0].ConnectionTypeID,
+          CurrentTypeID: parsedConnection[0].CurrentTypeID,
+          LevelID: parsedConnection[0].LevelID,
+          Quantity: parsedConnection[0].Quantity,
+        },
+    );
+
+
+    res.json('updated');
+  } catch (e) {
+    //console.log('station controller create failed', e);
+    res.json({message: e.message});
+  }
+
 };
 
 const station_delete = async (req, res) => {

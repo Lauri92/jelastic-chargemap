@@ -22,6 +22,6 @@ router.route('/area').get(station_list_get_by_area);
 router.route('/:id').
     get(station_get).
     delete(station_delete).
-    patch(station_patch);
+    put(station_patch);
 
 export default router;
