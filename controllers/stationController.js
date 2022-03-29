@@ -2,12 +2,15 @@
 
 import station from '../models/stationModel.js';
 import {rectangleBounds} from '../utils/rectangleBounds.js';
+import connections from '../models/connections.js';
 
 const station_list_get = async (req, res) => {
   try {
     const resultLimit = req.query.limit || 10;
     res.json(
-        await station.find().populate(stationPopulationOptions).limit(resultLimit));
+        await station.find().
+            populate(stationPopulationOptions).
+            limit(resultLimit));
   } catch (e) {
     res.status(400).send('Something went wrong');
   }
@@ -15,7 +18,8 @@ const station_list_get = async (req, res) => {
 
 const station_get = async (req, res) => {
   try {
-    res.json(await station.findById(req.params.id).populate(stationPopulationOptions));
+    res.json(await station.findById(req.params.id).
+        populate(stationPopulationOptions));
   } catch (e) {
     res.status(400).send('Something went wrong');
   }
@@ -43,11 +47,13 @@ const station_list_get_by_area = async (req, res) => {
 };
 
 const station_post = async (req, res) => {
-  console.log(req.body);
   try {
-    const newStation = req.body;
-    await station.create(newStation);
-    res.json(newStation);
+    const parsedConnection = JSON.parse(req.body.connections);
+    console.log(parsedConnection);
+    const insertedConnection = await connections.create(parsedConnection);
+    console.log(insertedConnection);
+
+    res.json(insertedConnection);
   } catch (e) {
     console.log('station controller create failed', e);
     res.json({message: e.message});

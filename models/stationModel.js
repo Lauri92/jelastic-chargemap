@@ -6,7 +6,6 @@ import connections from './connections.js';
 const Schema = mongoose.Schema;
 
 const stationSchema = new Schema({
-  _id: Schema.Types.ObjectId,
   Title: {type: String},
   Town: {type: String},
   AddressLine1: {type: String},
