@@ -50,7 +50,6 @@ const station_post = async (req, res) => {
   try {
     const parsedConnection = await JSON.parse(req.body.Connections);
     const parsedStation = await JSON.parse(req.body.Station);
-    console.log(parsedStation);
 
     const insertedConnections = await connections.create(parsedConnection);
 
@@ -77,6 +76,16 @@ const station_post = async (req, res) => {
 const station_patch = async (req, res) => {
 };
 
+const station_delete = async (req, res) => {
+  try {
+    const deleted = await station.deleteOne({_id: req.params.id});
+    return res.send(deleted);
+  } catch (error) {
+    console.error(error);
+    return res.json({error: error.message});
+  }
+};
+
 const stationPopulationOptions = [
 
   {
@@ -96,4 +105,5 @@ export {
   station_list_get_by_area,
   station_post,
   station_patch,
+  station_delete,
 };
