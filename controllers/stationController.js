@@ -48,14 +48,28 @@ const station_list_get_by_area = async (req, res) => {
 
 const station_post = async (req, res) => {
   try {
-    const parsedConnection = JSON.parse(req.body.connections);
-    console.log(parsedConnection);
-    const insertedConnection = await connections.create(parsedConnection);
-    console.log(insertedConnection);
+    const parsedConnection = await JSON.parse(req.body.Connections);
+    const parsedStation = await JSON.parse(req.body.Station);
+    console.log(parsedStation);
 
-    res.json(insertedConnection);
+    const insertedConnections = await connections.create(parsedConnection);
+
+    const newStation = await station.create({
+      Title: parsedStation.Title,
+      Town: parsedStation.Town,
+      AddressLine1: parsedStation.AddressLine1,
+      StateOrProvince: parsedStation.StateOrProvince,
+      Postcode: parsedStation.Postcode,
+      Location: {
+        coordinates: parsedStation.Location.coordinates,
+        type: parsedStation.Location.type,
+      },
+      Connections: insertedConnections,
+    });
+
+    res.json(newStation);
   } catch (e) {
-    console.log('station controller create failed', e);
+    //console.log('station controller create failed', e);
     res.json({message: e.message});
   }
 };
