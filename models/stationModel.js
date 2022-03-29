@@ -1,7 +1,7 @@
 'use strict';
 
 import mongoose from 'mongoose';
-import connections from './connections.js'
+import connections from './connections.js';
 
 const Schema = mongoose.Schema;
 
