@@ -15,13 +15,13 @@ const router = Router();
 
 router.route('/').
     get(station_list_get).
-    post(station_post, passport.authenticate('jwt', {session: false}));
+    post(passport.authenticate('jwt', {session: false}), station_post);
 
 router.route('/area').get(station_list_get_by_area);
 
 router.route('/:id').
     get(station_get).
-    delete(station_delete).
-    put(station_patch);
+    delete(passport.authenticate('jwt', {session: false}), station_delete).
+    put(passport.authenticate('jwt', {session: false}), station_patch);
 
 export default router;
