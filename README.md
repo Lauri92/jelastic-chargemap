@@ -1,6 +1,6 @@
 Endpoints
 
-POST, PUT and DELETE and delete requests require bearer token to be sent in the authorization header,
+POST, PUT and DELETE and delete requests require bearer token to be sent in the authorization header.
 
 ### Authentication route
 
@@ -68,7 +68,7 @@ POST, PUT and DELETE and delete requests require bearer token to be sent in the 
 ### Get a single station by its id
 
 * URL:
-    * ``/station/{id]``
+    * ``/station/{id}``
 * Method
     * ``GET``
         * Body
@@ -82,7 +82,7 @@ POST, PUT and DELETE and delete requests require bearer token to be sent in the 
 ### Update a single station by its id
 
 * URL:
-    * ``/station/{id]``
+    * ``/station/{id}``
 * Method
     * ``PUT``
         * Body
@@ -97,7 +97,7 @@ POST, PUT and DELETE and delete requests require bearer token to be sent in the 
 ### Delete a single station by its id
 
 * URL:
-    * ``/station/{id]``
+    * ``/station/{id}``
 * Method
     * ``DELETE``
         * Body
