@@ -3,7 +3,6 @@
 import station from '../models/stationModel.js';
 import {rectangleBounds} from '../utils/rectangleBounds.js';
 import connections from '../models/connections.js';
-import mongoose from 'mongoose';
 
 const station_list_get = async (req, res) => {
   try {
@@ -77,9 +76,9 @@ const station_post = async (req, res) => {
 const station_patch = async (req, res) => {
 
   try {
-    const parsedConnection = await JSON.parse(req.body.Connections);
+    const parsedConnections = await JSON.parse(req.body.Connections);
     const parsedStation = await JSON.parse(req.body.Station);
-    console.log(parsedConnection[0]._id);
+    console.log(parsedConnections[0]._id);
 
     await station.findOneAndUpdate(
         {_id: parsedStation._id},
@@ -94,16 +93,18 @@ const station_patch = async (req, res) => {
             type: parsedStation.Location.type,
           },
         });
-    await connections.findOneAndUpdate(
-        {_id: parsedConnection[0]._id},
-        {
-          ConnectionTypeID: parsedConnection[0].ConnectionTypeID,
-          CurrentTypeID: parsedConnection[0].CurrentTypeID,
-          LevelID: parsedConnection[0].LevelID,
-          Quantity: parsedConnection[0].Quantity,
-        },
-    );
 
+    for (const connection of parsedConnections) {
+      await connections.findOneAndUpdate(
+          {_id: connection._id},
+          {
+            ConnectionTypeID: connection.ConnectionTypeID,
+            CurrentTypeID: connection.CurrentTypeID,
+            LevelID: connection.LevelID,
+            Quantity: connection.Quantity,
+          },
+      );
+    }
 
     res.json('updated');
   } catch (e) {
