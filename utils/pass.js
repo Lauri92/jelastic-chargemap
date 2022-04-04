@@ -2,6 +2,7 @@
 import passport from 'passport';
 import {Strategy} from 'passport-local';
 import passportJWT from 'passport-jwt';
+import bcrypt from 'bcrypt';
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -42,20 +43,21 @@ passport.use(new Strategy(
 ));
 */
 
-
 // local strategy for username password login
 passport.use(new Strategy(
     async (username, password, done) => {
-      const params = [username];
       try {
-        const [user] = getUserLogin(params);
-        console.log('Local strategy', user);
+        const user = getUserLogin(username);
+        console.log('Local strategy', user); // result is binary row
         if (user === undefined) {
-          return done(null, false, {message: 'Incorrect email.'});
+          // consider artificial slowness to simulate slow password check (and anyway slowdown brute force attack)
+          // setTimeout(() => { /*done*/ },  Math.floor(Math.random() * 1000));
+          return done(null, false, {message: 'Wrong credentials.'});
         }
-        if (user.password !== password) {
-          return done(null, false, {message: 'Incorrect password.'});
+        if (!await bcrypt.compare(password, user.password)) {
+          return done(null, false, {message: 'Wrong credentials.'});
         }
+        delete user.password; // make sure that the password do not travel around...
         return done(null, {...user}, {message: 'Logged In Successfully'}); // use spread syntax to create shallow copy to get rid of binary row type
       } catch (err) {
         return done(err);
@@ -67,7 +69,7 @@ passport.use(new Strategy(
 
 passport.use(new JWTStrategy({
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: "abc",
+      secretOrKey: 'abc',
     },
     async (jwtPayLoad, done) => {
       try {

@@ -1,9 +1,13 @@
 'use strict';
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
 import stationRoute from './routes/stationRoute.js';
 import authRoute from './routes/authRoute.js';
 import passport from './utils/pass.js';
 import db from './utils/db.js';
+import bcrypt from 'bcrypt';
 
 const port = process.env.PORT || 3000;
 
@@ -17,8 +21,13 @@ app.use(passport.initialize({}));
 app.use('/station', stationRoute); // passport.authenticate('jwt', {session: false})
 app.use('/auth', authRoute);
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (req.secure) {
+    const saltRound = 12;
+    const pwd1234 = await bcrypt.hash('1234', saltRound);
+    console.log('1234 possible hash: ', pwd1234);
+    const pwdQwert = await bcrypt.hash('qwer', saltRound);
+    console.log('qwer possible hash: ', pwdQwert);
     res.send('Hello secure chargemap');
   } else {
     res.send('Not secure chargemap');

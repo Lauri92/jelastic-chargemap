@@ -1,5 +1,7 @@
 'use strict';
 import dotenv from 'dotenv';
+
+dotenv.config();
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
@@ -14,12 +16,11 @@ const options = {
 };
 
 export default (app, port) => {
-  console.log("localhost connected");
-  https.createServer(options).listen(httpsPort);
-
+  https.createServer(options, app).listen(httpsPort);
   http.createServer((req, res) => {
-    res.writeHead(301,
-        {'Location': `https://localhost:${httpsPort}` + req.url});
+    res.writeHead(301, {
+      Location: `https://localhost:${httpsPort}` + req.url,
+    });
     res.end();
   }).listen(port);
-}
+};
