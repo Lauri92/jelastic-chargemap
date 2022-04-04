@@ -11,11 +11,13 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.8",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "qs": "^6.10.3"
   },
   "type": "module"
 }
