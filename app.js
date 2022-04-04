@@ -4,10 +4,12 @@ import stationRoute from './routes/stationRoute.js';
 import authRoute from './routes/authRoute.js';
 import passport from './utils/pass.js';
 import db from './utils/db.js';
+import http from 'http';
 import https from 'https';
 import fs from 'fs';
 
 const port = process.env.PORT || 3000;
+const httpsPort = process.env.PORT || 8000;
 
 const app = express();
 
@@ -36,7 +38,11 @@ app.get('/', (req, res) => {
 });
 
 db.on('connected', () => {
-  https.createServer(options, app).listen(8000).on('error', (err) => {
+  https.createServer(options, app).listen(httpsPort);
+  http.createServer((req, res) => {
+    res.writeHead(301, {'Location': `https://localhost:${httpsPort}` + req.url});
+    res.end();
+  }).listen(port).on('error', (err) => {
     console.log(`Connection error: ${err.message}`);
   });
 });
