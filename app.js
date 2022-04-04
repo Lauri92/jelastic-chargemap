@@ -25,8 +25,13 @@ app.get('/', (req, res) => {
   }
 });
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 db.on('connected', () => {
-  (async () => (await import('./utils/localhost.js')).default(app, port))();
+  if (process.env.NODE_ENV === 'production') {
+    (async () => (await import('./utils/production.js')).default(app, port))();
+  } else {
+    (async () => (await import('./utils/localhost.js')).default(app, port))();
+  }
 }).on('error', (err) => {
   console.log(`Connection error: ${err.message}`);
 });

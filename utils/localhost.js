@@ -14,6 +14,7 @@ const options = {
 };
 
 export default (app, port) => {
+  console.log("localhost connected");
   https.createServer(options).listen(httpsPort);
 
   http.createServer((req, res) => {
