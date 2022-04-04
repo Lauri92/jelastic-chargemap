@@ -4,22 +4,10 @@ import stationRoute from './routes/stationRoute.js';
 import authRoute from './routes/authRoute.js';
 import passport from './utils/pass.js';
 import db from './utils/db.js';
-import http from 'http';
-import https from 'https';
-import fs from 'fs';
 
 const port = process.env.PORT || 3000;
-const httpsPort = process.env.PORT || 8000;
 
 const app = express();
-
-const sslkey = fs.readFileSync('ssl-key.pem');
-const sslcert = fs.readFileSync('ssl-cert.pem');
-
-const options = {
-  key: sslkey,
-  cert: sslcert,
-};
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -38,12 +26,7 @@ app.get('/', (req, res) => {
 });
 
 db.on('connected', () => {
-  https.createServer(options, app).listen(httpsPort);
-  http.createServer((req, res) => {
-    res.writeHead(301, {'Location': `https://localhost:${httpsPort}` + req.url});
-    res.end();
-  }).listen(port).on('error', (err) => {
-    console.log(`Connection error: ${err.message}`);
-  });
+  (async () => (await import('./utils/localhost.js')).default(app, port))();
+}).on('error', (err) => {
+  console.log(`Connection error: ${err.message}`);
 });
-
