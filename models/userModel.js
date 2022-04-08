@@ -4,7 +4,7 @@ const users = [
     id: '1',
     name: 'John Doe',
     email: 'john@metropolia.fi',
-    password: '1234',
+    password: '$2b$12$e13rkxVHzBEcd8Bt84jOvOaQFtdNjzgrArlf7IOasxtAqvIfoBGBK',
   },
   {
     id: '2',
@@ -14,11 +14,11 @@ const users = [
   },
 ];
 
-const getUserLogin = (email) => {
-  return users.filter((usr) => {
-    console.log(email);
+const getUserLogin = async (email) => {
+  const user = users.filter((usr) => {
     return email === usr.email;
   });
+  return user[0]
 };
 
 export {

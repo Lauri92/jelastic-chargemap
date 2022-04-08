@@ -6,7 +6,7 @@ const login = (req, res) => {
   passport.authenticate('local', {session: false}, (err, user, info) => {
     console.log('authcontroller user:', user);
     if (err || !user) {
-      return res.status(400).send('Error loggin in');
+      return res.status(400).send("wrong input");
     }
     req.login(user, {session: false}, (err) => {
       if (err) {

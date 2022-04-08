@@ -8,57 +8,25 @@ const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 import {getUserLogin} from '../models/userModel.js';
 
-/*
-// serialize: store user id in session
-passport.serializeUser((user, done) => {
-  console.log('serialize', user);
-  // serialize user id by adding it to 'done()' callback
-  done(null, user);
-});
-
-// deserialize: get user from session and get all user data
-passport.deserializeUser(async (user, done) => {
-  console.log('deserialize', user);
-  // deserialize user by adding it to 'done()' callback
-  done(null, user);
-});
-
-passport.use(new Strategy(
-    (username, password, done) => {
-      // get user by username (in this case email) from userModel/getUserLogin
-      const user = getUserLogin(username);
-      console.log(user);
-      // if user is undefined
-      if (!user) {
-        return done(null, false);
-      }
-      // if passwords dont match
-      if (password !== user.password) {
-        return done(null, false);
-      }
-      // if all is ok
-      delete user.password;
-      return done(null, user);
-    },
-));
-*/
 
 // local strategy for username password login
 passport.use(new Strategy(
     async (username, password, done) => {
       try {
-        const user = getUserLogin(username);
-        console.log('Local strategy', user); // result is binary row
-        if (user === undefined) {
+        const user = await getUserLogin(username);
+        console.log('Local strategy', user);
+        if (user === undefined || user === false) {
           // consider artificial slowness to simulate slow password check (and anyway slowdown brute force attack)
           // setTimeout(() => { /*done*/ },  Math.floor(Math.random() * 1000));
-          return done(null, false, {message: 'Wrong credentials.'});
+          return done(null, false, {message: 'Wrong user.'});
         }
         if (!await bcrypt.compare(password, user.password)) {
-          return done(null, false, {message: 'Wrong credentials.'});
+          console.log("got into comapre");
+          return done(null, false, {message: 'Wrong PW.'});
         }
         delete user.password; // make sure that the password do not travel around...
-        return done(null, {...user}, {message: 'Logged In Successfully'}); // use spread syntax to create shallow copy to get rid of binary row type
+        console.log("got after deletion");
+        return done(null, user, {message: 'Logged In Successfully'}); // use spread syntax to create shallow copy to get rid of binary row type
       } catch (err) {
         return done(err);
       }

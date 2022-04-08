@@ -8,6 +8,7 @@ import authRoute from './routes/authRoute.js';
 import passport from './utils/pass.js';
 import db from './utils/db.js';
 import bcrypt from 'bcrypt';
+import helmet from 'helmet';
 
 const port = process.env.PORT || 3000;
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use(passport.initialize({}));
+app.use(helmet({}));
 
 app.use('/station', stationRoute); // passport.authenticate('jwt', {session: false})
 app.use('/auth', authRoute);
