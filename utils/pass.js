@@ -21,11 +21,9 @@ passport.use(new Strategy(
           return done(null, false, {message: 'Wrong user.'});
         }
         if (!await bcrypt.compare(password, user.password)) {
-          console.log("got into comapre");
           return done(null, false, {message: 'Wrong PW.'});
         }
         delete user.password; // make sure that the password do not travel around...
-        console.log("got after deletion");
         return done(null, user, {message: 'Logged In Successfully'}); // use spread syntax to create shallow copy to get rid of binary row type
       } catch (err) {
         return done(err);
